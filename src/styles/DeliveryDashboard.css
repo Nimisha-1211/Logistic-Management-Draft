@@ -1,0 +1,9 @@
+.delivery-dashboard {
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.card-header {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
