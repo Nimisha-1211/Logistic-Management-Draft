@@ -15,17 +15,15 @@ function LoginPage() {
     name: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    employment: ''
+    employment:''
   });
-
-  const navigate = useNavigate();
+  const navigate=useNavigate()
 
   const handleLoginClick = (role) => {
-    setFormData((prev) => ({
+    setFormData((prev)=>({
       ...prev,
       employment: role,
-    }));
+    }))
     setSelectedRole(role);
   };
 
@@ -36,53 +34,65 @@ function LoginPage() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
-    const body = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    };
+
+     const body={
+       method:'POST',
+       headers:{'content-Type':'application/json'},
+       body:JSON.stringify(formData)
+     } 
+   
 
     if (isRegistering) {
       if (formData.password !== formData.confirmPassword) {
         alert("Passwords do not match!");
         return;
       }
+      // Registration API logic here (MongoDB)
+      alert(
+        Registering ${formData.name} as ${selectedRole} with email: ${formData.email}
+      );
 
-      alert(`Registering ${formData.name} as ${selectedRole} with email: ${formData.email}`);
+      // Example POST request (backend required)
+      /*
+      fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, role: selectedRole }),
+      }).then(...);
+      */
+   
+       const fetching=await fetch('http://localhost:3000/register',body)
+      
+       const response=await fetching.json()
+       console.log(response)
+      
+     
 
-      try {
-        const fetching = await fetch('http://localhost:3000/register', body);
-        const response = await fetching.json();
-        console.log(response);
-      } catch (error) {
-        console.error('Registration error:', error);
-        alert('Registration failed. Please try again.');
-      }
 
     } else {
-      alert(`Logging in as ${selectedRole} with email: ${formData.email}`);
+      // Login API logic here (MongoDB)
+      alert(
+        Logging in as ${selectedRole} with email: ${formData.email}
+      );
 
-      try {
-        const fetching = await fetch('http://localhost:3000/login', body);
-        const response = await fetching.json();
-        console.log(response);
+      // Example POST request (backend required)
+      /*
+      fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email, password: formData.password }),
+      }).then(...);
+      */
 
-        if (fetching.status === 201 && selectedRole === 'Admin') {
-          navigate('/admin');
-        } else if (fetching.status === 201 && selectedRole === 'Warehouse Manager') {
-          navigate('/warehouse');
-        } else if (fetching.status === 201 && selectedRole === 'Delivery Staff') {
-          navigate('/delivery');
-        } else {
-          alert('Invalid credentials or role mismatch.');
+      const fetching=await fetch('http://localhost:3000/login',body)
+       const response=await fetching.json()
+       console.log(response)
+          if(fetching.status===201 && selectedRole==='Admin'){
+           navigate('/admin')
         }
-      } catch (error) {
-        console.error('Login error:', error);
-        alert('Login failed. Please try again.');
-      }
     }
   };
 
@@ -173,4 +183,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default LoginPage;
